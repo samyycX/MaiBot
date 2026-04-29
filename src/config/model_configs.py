@@ -162,6 +162,15 @@ class APIProvider(ConfigBase):
     )
     """推理内容解析模式。可选值：`auto`、`native`、`think_tag`、`none`。"""
 
+    echo_reasoning: bool = Field(
+        default=False,
+        json_schema_extra={
+            "x-widget": "switch",
+            "x-icon": "repeat-2",
+        },
+    )
+    """是否将模型返回的推理内容回传到API。部分 API 提供商强制要求开启（如 DeepSeek）。"""
+
     tool_argument_parse_mode: str = Field(
         default=ToolArgumentParseMode.AUTO.value,
         json_schema_extra={

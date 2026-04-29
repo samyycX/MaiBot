@@ -77,6 +77,7 @@ class Message:
     tool_call_id: str | None = None
     tool_name: str | None = None
     tool_calls: List[ToolCall] | None = None
+    reasoning_content: str | None = None
 
     def __post_init__(self) -> None:
         """执行消息对象的基础校验。
@@ -84,7 +85,11 @@ class Message:
         Raises:
             ValueError: 当消息内容或工具调用信息不完整时抛出。
         """
-        if not self.parts and not (self.role == RoleType.Assistant and self.tool_calls):
+        if (
+            not self.parts
+            and not (self.role == RoleType.Assistant and self.tool_calls)
+            and not (self.role == RoleType.Assistant and self.reasoning_content)
+        ):
             raise ValueError("消息内容不能为空")
         if self.role == RoleType.Tool and not self.tool_call_id:
             raise ValueError("Tool 角色的工具调用 ID 不能为空")
@@ -125,7 +130,8 @@ class Message:
         """
         return (
             f"Role: {self.role}, Parts: {self.parts}, "
-            f"Tool Call ID: {self.tool_call_id}, Tool Name: {self.tool_name}, Tool Calls: {self.tool_calls}"
+            f"Tool Call ID: {self.tool_call_id}, Tool Name: {self.tool_name}, "
+            f"Tool Calls: {self.tool_calls}, Reasoning: {self.reasoning_content}"
         )
 
 
@@ -139,6 +145,7 @@ class MessageBuilder:
         self.__tool_call_id: str | None = None
         self.__tool_name: str | None = None
         self.__tool_calls: List[ToolCall] | None = None
+        self.__reasoning_content: str | None = None
 
     def set_role(self, role: RoleType = RoleType.User) -> "MessageBuilder":
         """设置消息角色。
@@ -279,6 +286,18 @@ class MessageBuilder:
         self.__tool_calls = list(tool_calls)
         return self
 
+    def set_reasoning_content(self, reasoning_content: str | None) -> "MessageBuilder":
+        """设置助手消息中的推理内容。
+
+        Args:
+            reasoning_content: 推理内容。
+
+        Returns:
+            MessageBuilder: 当前构建器实例。
+        """
+        self.__reasoning_content = reasoning_content
+        return self
+
     def build(self) -> Message:
         """构建消息对象。
 
@@ -291,4 +310,5 @@ class MessageBuilder:
             tool_call_id=self.__tool_call_id,
             tool_name=self.__tool_name,
             tool_calls=list(self.__tool_calls) if self.__tool_calls else None,
+            reasoning_content=self.__reasoning_content,
         )

@@ -625,6 +625,7 @@ class MaisakaChatLoopService:
             content=final_response,
             timestamp=datetime.now(),
             tool_calls=final_tool_calls,
+            reasoning_content=generation_result.reasoning or None,
         )
         return ChatResponse(
             content=final_response or None,

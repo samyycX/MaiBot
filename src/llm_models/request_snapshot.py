@@ -186,6 +186,8 @@ def serialize_message_snapshot(message: Message) -> dict[str, Any]:
         payload["tool_name"] = message.tool_name
     if message.tool_calls:
         payload["tool_calls"] = serialize_tool_calls_snapshot(message.tool_calls)
+    if message.reasoning_content:
+        payload["reasoning_content"] = message.reasoning_content
     return payload
 
 
@@ -213,6 +215,10 @@ def deserialize_message_snapshot(raw_message: Any) -> Message:
     tool_name = raw_message.get("tool_name")
     if role == RoleType.Tool and isinstance(tool_name, str) and tool_name:
         builder.set_tool_name(tool_name)
+
+    reasoning_content = raw_message.get("reasoning_content")
+    if isinstance(reasoning_content, str) and reasoning_content:
+        builder.set_reasoning_content(reasoning_content)
 
     raw_parts = raw_message.get("parts", [])
     if not isinstance(raw_parts, list):
