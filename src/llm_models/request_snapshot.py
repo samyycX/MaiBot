@@ -384,6 +384,7 @@ def serialize_api_provider_snapshot(api_provider: APIProvider) -> dict[str, Any]
         "project": api_provider.project,
         "retry_interval": api_provider.retry_interval,
         "timeout": api_provider.timeout,
+        "echo_reasoning": api_provider.echo_reasoning
     }
 
 
