@@ -453,6 +453,10 @@ def _build_message_from_dict(raw_message: PromptMessage) -> Message:
     if "content" in raw_message and raw_message["content"] not in (None, "", []):
         _append_content_parts(message_builder, raw_message["content"])
 
+    reasoning_content = raw_message.get("reasoning_content")
+    if isinstance(reasoning_content, str) and reasoning_content:
+        message_builder.set_reasoning_content(reasoning_content)
+
     return message_builder.build()
 
 
