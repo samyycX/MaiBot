@@ -740,6 +740,7 @@ class MaisakaChatLoopService:
                             timestamp=message.timestamp,
                             tool_calls=kept_tool_calls,
                             source_kind=message.source_kind,
+                            reasoning_content=message.reasoning_content,
                         )
                     )
                     continue
